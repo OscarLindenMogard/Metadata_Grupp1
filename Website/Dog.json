@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "name": "Vera",
+        "dep": "Vera är en snäll och glad hund som gillar att leka.",
+        "Image": "Vera.jpg"
+    },
+    {
+        "id": 2,
+        "name": "Appa",
+        "dep": "Appa är en cat som gillar att sova hela dagarna",
+        "Image": "Appa.jpg"
+    },
+    {
+        "id": 3,
+        "name": "Ace",
+        "dep": "Ace är en katt som gillar att gömma sig och springa",
+        "Image": "Ace.jpg"
+    }
+]

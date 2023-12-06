@@ -1,0 +1,19 @@
+img {
+    width: 300px;
+    float: right;
+}
+
+Body {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+section {
+    overflow: auto;
+    border-bottom: 3px solid black;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+
+h2 {
+    color: black;
+}
