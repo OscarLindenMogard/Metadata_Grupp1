@@ -1,0 +1,40 @@
+body {
+  font-family: Verdana;
+}
+
+img {
+  width: 200px;
+  float: right;
+}
+
+section {
+  overflow: auto;
+  border-bottom: 1px solid black;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+}
+
+h2 {
+  color: rgb(157, 35, 35);
+}
+
+h1 {
+  color: rgb(9, 53, 74);
+}
+
+.h2-yellow {
+  color: #cbbc1a;
+}
+
+input {
+  width: 60%;
+  padding: 5px;
+}
+
+button {
+  padding: 5px;
+}
+
+.searchResults {
+  margin-top: 20px;
+}
