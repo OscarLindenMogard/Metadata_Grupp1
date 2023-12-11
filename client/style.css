@@ -38,3 +38,39 @@ button {
 .searchResults {
   margin-top: 20px;
 }
+
+.searchContainer {
+  text-align: center;
+  margin: 20px auto; 
+  padding: 20px;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  max-width: 400px; 
+  background-color: #ffffff;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input,
+select,
+button {
+  margin: 5px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 16px;
+}
+
+button {
+  background-color: #0d0e0e;
+  color: rgb(229, 216, 216);
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #303133;
+}

@@ -4,33 +4,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Musik</title>
+  <title>Sök</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <h1>Musiksök</h1>
-  <!-- A form with a search field and a search button-->
-  <!-- Call the search function when the form is sent/submitted -->
-  <!-- return false is needed fro the web page NOT to reload -->
-  <form name="searchForm" onsubmit="search(); return false">
-    <input name="term" placeholder="Search term">
-    <button type="submit">Sök</button>
-    <p>
-      Sök i:
-      <select name="searchType">
-        <option value="all">Filter</option>
-        <option value="artist">Artistnamn</option>
-        <option value="album">Albumnamn</option>
-        <option value="title">Låtnamn</option>
-      </select>
-    </p>
-  </form>
-  <!-- A section of the page with serch results-->
+    <form name="searchForm" onsubmit="search(); return false">
+      <input name="term" placeholder="Search term">
+      <button type="submit">Sök</button>
+      <p>
+        Sök i:
+        <select name="searchType">
+          <option value="all">Filter</option>
+          <option value="artist">Artistnamn</option>
+          <option value="album">Albumnamn</option>
+          <option value="title">Låtnamn</option>
+        </select>
+      </p>
+    </form>
+  </div>
+  
   <article class="searchResults">
     Sök efter en låt.
   </article>
-  <!-- Load and run the main.js javasccript -->
+  
   <script src="main.js"></script>
 </body>
 

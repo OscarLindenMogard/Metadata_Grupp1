@@ -46,7 +46,8 @@ app.get('/api/music/:searchTerm/:searchType', async (request, response) => {
   let sql = `
    SELECT * 
    FROM music
-   WHERE LOWER(metadata -> '$.common.${searchType}') LIKE LOWER (?)
+   WHERE LOWER(metadata ->> '$.${searchType}') LIKE LOWER(?)
+   LIMIT 10
   `;
 
   // since the sql gets a bit different if you want to search all
@@ -55,7 +56,8 @@ app.get('/api/music/:searchTerm/:searchType', async (request, response) => {
     sql = `
       SELECT *
       FROM music
-      WHERE metadata LIKE ?
+      WHERE LOWER(metadata) LIKE LOWER(?)
+      LIMIT 10
     `;
   }
 
