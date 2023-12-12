@@ -19,7 +19,8 @@ h2 {
 }
 
 h1 {
-  color: rgb(9, 53, 74);
+  color: rgb(9, 132, 188);
+  size: 40px;
 }
 
 .h2-yellow {
@@ -36,16 +37,19 @@ button {
 }
 
 .searchResults {
+  background-color: #0d0d5d;
   margin-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .searchContainer {
   text-align: center;
-  margin: 20px auto; 
+  margin: 20px auto;
   padding: 20px;
   border: 1px solid #ffffff;
   border-radius: 5px;
-  max-width: 400px; 
+  max-width: 400px;
   background-color: #ffffff;
 }
 
@@ -67,10 +71,44 @@ button {
 
 button {
   background-color: #0d0e0e;
-  color: rgb(229, 216, 216);
+  color: #e5d8d8;
   cursor: pointer;
 }
 
 button:hover {
   background-color: #303133;
+}
+
+#wrapper {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #0e2c60;
+  min-height: 700px;
+  opacity: 0.85;
+}
+
+#outerWrapper {
+  background-image: url(img/metadata-1.jpg);
+  background-attachment: fixed;
+}
+
+[type="checkbox"] {
+  vertical-align: middle;
+  width: auto;
+}
+
+/* .checkboxes input {
+  margin: 0px;
+  padding: 0px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 14px;
+  display: inline-block;
+} */
+
+.checkboxes {
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
 }

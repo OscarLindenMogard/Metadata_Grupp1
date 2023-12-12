@@ -4,30 +4,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sök</title>
+  <title>Search</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <form name="searchForm" onsubmit="search(); return false">
-      <input name="term" placeholder="Search term">
-      <button type="submit">Sök</button>
-      <p>
-        Sök i:
-        <select name="searchType">
-          <option value="all">Filter</option>
-          <option value="artist">Artistnamn</option>
-          <option value="album">Albumnamn</option>
-          <option value="title">Låtnamn</option>
-        </select>
-      </p>
-    </form>
+  <div id="outerWrapper">
+    <div id="wrapper">
+      <form name="searchForm" onsubmit="search(); return false">
+        <input name="term" placeholder="Search term">
+        <button type="submit">Search</button>
+        <p class="checkboxes">
+          <input type="checkbox" id="music" name="music" value="Music">Music 
+          <input type="checkbox" id="powerpoint" name="powerpoint" value="Ppt">Powerpoint
+        </p>
+
+        <p>
+          Search for:
+          <select name="searchType">
+            <option value="all">Filter</option>
+            <option value="artist">Artist name</option>
+            <option value="album">Album name</option>
+            <option value="title">Track name</option>
+          </select>
+        </p>
+      </form>
+
+
+      <article class="searchResults">
+        Select something to search for.
+      </article>
+    </div>
   </div>
-  
-  <article class="searchResults">
-    Sök efter en låt.
-  </article>
-  
   <script src="main.js"></script>
 </body>
 

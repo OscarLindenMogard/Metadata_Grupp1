@@ -19,8 +19,8 @@ async function search() {
     console.log(songs)
     // Create an empty string to hold HTML content
     let html = `
-      <p>Du sökte efter "${searchTerm}"...</p>
-      <p>Hittade ${songs.length} låtar.</p>
+      <p>You searched for "${searchTerm}"...</p>
+      <p>Found ${songs.length} tracks.</p>
     `;
 
     // Loop through the found songs
