@@ -47,6 +47,9 @@ async function search() {
   } else if (cbValue === "all") {
     searchType = document.forms.searchForm.searchTypeall.value;
     path = "all";
+  } else if (cbValue === "pdf") {
+    searchType = document.forms.searchForm.searchTypePdf.value;
+    path = "pdf";
   } else {
     searchType = document.forms.searchForm.searchTypeppt.value;
     path = "powerpoint";

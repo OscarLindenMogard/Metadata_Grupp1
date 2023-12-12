@@ -15,9 +15,10 @@
         <input name="term" placeholder="Search term">
         <button type="submit">Search</button>
         <p class="checkboxes">
-          <input onchange="checkboxChange(this);" type="checkbox" id="music" name="checkboxfilter" value="music">Music
-          <input onchange="checkboxChange(this);" type="checkbox" id="ppt" name="checkboxfilter" value="ppt">Powerpoint
-          <input onchange="checkboxChange(this);" type="checkbox" id="all" name="checkboxfilter" value="all">All
+          <input onchange="checkboxChange(this);" type="checkbox" id="music" name="checkboxfilter" value="music">Music</input>
+          <input onchange="checkboxChange(this);" type="checkbox" id="ppt" name="checkboxfilter" value="ppt">Powerpoint</input>
+          <input onchange="checkboxChange(this);" type="checkbox" id="pdf" name="checkboxfilter" value="pdf">PDF</input>
+          <input onchange="checkboxChange(this);" type="checkbox" id="all" name="checkboxfilter" value="all">All</input>
         </p>
 
         <p>
@@ -36,6 +37,14 @@
             <option value="all">All</option>
             <option value="title">Powerpoint title</option>
             <option value="company">Company</option>
+          </select>
+        </div>
+        <div id="pdfFilter" style="display:none;">
+          Filter PDF:
+          <select name="searchTypePdf">
+            <option value="all">All</option>
+            <option value="title">Title</option>
+            <option value="company">Author</option>
           </select>
         </div>
         <div id="allFilter" style="display:none;">
