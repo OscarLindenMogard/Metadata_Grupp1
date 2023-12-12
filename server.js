@@ -24,7 +24,7 @@ app.listen(3000, () =>
 // Create a connection 'db' to the database
 const db = await mysql.createConnection({
   host: '161.97.144.27',
-  port:  8091,
+  port: 8091,
   user: 'root',
   password: 'guessagain91',
   database: 'Gruppuppgift'
@@ -36,39 +36,41 @@ async function query(sql, listOfValues) {
   return result[0];
 }
 
+function ImportPowerointToMySql() {
+  // Read the json string from file
+  let json = fs.readFileSync('./csvjson.json', 'utf-8');
 
-// Read the json string from file
-let json = fs.readFileSync('./csvjson.json', 'utf-8');
-
-// Convert from a string to a real data structure
-let data = JSON.parse(json);
+  // Convert from a string to a real data structure
+  let data = JSON.parse(json);
 
 
-for (let powerpointMetadata of data) {
-  // extract the file name (the property digest + '.ppt)
-  let fileName = powerpointMetadata.digest + '.ppt';
+  for (let powerpointMetadata of data) {
+    // extract the file name (the property digest + '.ppt)
+    let fileName = powerpointMetadata.digest + '.ppt';
 
-  // remove the file name
-  delete powerpointMetadata.digest;
+    // remove the file name
+    delete powerpointMetadata.digest;
 
-  // remove sha hashes as well (only needed for file authenticy checks)
-  delete powerpointMetadata.sha256;
-  delete powerpointMetadata.sha512;
+    // remove sha hashes as well (only needed for file authenticy checks)
+    delete powerpointMetadata.sha256;
+    delete powerpointMetadata.sha512;
 
-  // console.log things to see that we have correct 
-  // filname and metadata
-  // console.log('');
-  // console.log(fileName);
-  // console.log(powerpointMetadata);
+    // console.log things to see that we have correct 
+    // filname and metadata
+    // console.log('');
+    // console.log(fileName);
+    // console.log(powerpointMetadata);
 
-  // Insert JSON into DB (powerpoint). uncomment this if you want to insert into DB
-  // let result = await query(`
-  //   INSERT INTO powerpoint (filename, powerpointMetadata)
-  //   VALUES(?, ?)
-  // `, [fileName, powerpointMetadata]);
-  // console.log(result);
+    // Insert JSON into DB (powerpoint). uncomment this if you want to insert into DB
+    // let result = await query(`
+    //   INSERT INTO powerpoint (filename, powerpointMetadata)
+    //   VALUES(?, ?)
+    // `, [fileName, powerpointMetadata]);
+    // console.log(result);
 
+  }
 }
+
 
 // A search route to find music
 app.get('/api/music/:searchTerm/:searchType', async (request, response) => {
@@ -101,4 +103,54 @@ app.get('/api/music/:searchTerm/:searchType', async (request, response) => {
 
   // Send a response to the client
   response.json(result);
+});
+
+// A search route to find powerpoints
+app.get('/api/powerpoint/:searchTerm/:searchType', async (request, response) => {
+  // Get the search term from as a parameter from the route/url
+  let searchTerm = request.params.searchTerm;
+  // Get teh search type a sa parameter from the route/url
+  let searchType = request.params.searchType;
+  // Make a database query and remember the result
+  // using the search term
+
+  let sql = `
+   SELECT * 
+   FROM powerpoint
+   WHERE LOWER(powerpointMetadata ->> '$.${searchType}') LIKE LOWER(?)
+   LIMIT 10
+  `;
+
+  // since the sql gets a bit different if you want to search all
+  // fix this with a if-clause replacing the sql
+  if (searchType == 'all') {
+    sql = `
+      SELECT *
+      FROM powerpoint
+      WHERE LOWER(powerpointMetadata) LIKE LOWER(?)
+      LIMIT 10
+    `;
+  }
+
+  let result = await query(sql, ['%' + searchTerm + '%']);
+
+  // Send a response to the client
+  response.json(result);
+});
+
+
+
+// A search route to find all
+app.get('/api/all', async (request, response) => {
+  console.log('ALL SP called:');
+
+  db.query('CALL sp_getAll()',function(err, rows){
+    if (err) throw err;
+  
+    console.log('Data received from Db:');
+    console.log(rows);
+  });
+
+  // Send a response to the client
+  response.json(rows);
 });

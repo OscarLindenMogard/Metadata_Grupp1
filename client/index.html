@@ -15,18 +15,35 @@
         <input name="term" placeholder="Search term">
         <button type="submit">Search</button>
         <p class="checkboxes">
-          <input type="checkbox" id="music" name="music" value="Music">Music 
-          <input type="checkbox" id="powerpoint" name="powerpoint" value="Ppt">Powerpoint
+          <input onchange="checkboxChange(this);" type="checkbox" id="music" name="checkboxfilter" value="music">Music
+          <input onchange="checkboxChange(this);" type="checkbox" id="ppt" name="checkboxfilter" value="ppt">Powerpoint
+          <input onchange="checkboxChange(this);" type="checkbox" id="all" name="checkboxfilter" value="all">All
         </p>
 
         <p>
-          Search for:
-          <select name="searchType">
-            <option value="all">Filter</option>
+        <div id="musicFilter" style="display:none;">
+          Filter music:
+          <select name="searchTypemusic">
+            <option value="all">All</option>
             <option value="artist">Artist name</option>
             <option value="album">Album name</option>
             <option value="title">Track name</option>
           </select>
+        </div>
+        <div id="pptFilter" style="display:none;">
+          Filter powerpoint:
+          <select name="searchTypeppt">
+            <option value="all">All</option>
+            <option value="title">Powerpoint title</option>
+            <option value="company">Company</option>
+          </select>
+        </div>
+        <div id="allFilter" style="display:none;">
+          Filter:
+          <select name="searchTypeall">
+            <option value="all">All</option>
+          </select>
+        </div>
         </p>
       </form>
 
