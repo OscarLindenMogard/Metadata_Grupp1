@@ -5,6 +5,9 @@ import express from 'express';
 // Import the database driver
 import mysql from 'mysql2/promise';
 
+// Import the file system module (fs)
+import fs from 'fs';
+
 // Create a web server named app
 const app = express();
 
@@ -33,6 +36,39 @@ async function query(sql, listOfValues) {
   return result[0];
 }
 
+
+// Read the json string from file
+let json = fs.readFileSync('./csvjson.json', 'utf-8');
+
+// Convert from a string to a real data structure
+let data = JSON.parse(json);
+
+
+for (let powerpointMetadata of data) {
+  // extract the file name (the property digest + '.ppt)
+  let fileName = powerpointMetadata.digest + '.ppt';
+
+  // remove the file name
+  delete powerpointMetadata.digest;
+
+  // remove sha hashes as well (only needed for file authenticy checks)
+  delete powerpointMetadata.sha256;
+  delete powerpointMetadata.sha512;
+
+  // console.log things to see that we have correct 
+  // filname and metadata
+  // console.log('');
+  // console.log(fileName);
+  // console.log(powerpointMetadata);
+
+  // Insert JSON into DB (powerpoint). uncomment this if you want to insert into DB
+  // let result = await query(`
+  //   INSERT INTO powerpoint (filename, powerpointMetadata)
+  //   VALUES(?, ?)
+  // `, [fileName, powerpointMetadata]);
+  // console.log(result);
+
+}
 
 // A search route to find music
 app.get('/api/music/:searchTerm/:searchType', async (request, response) => {
