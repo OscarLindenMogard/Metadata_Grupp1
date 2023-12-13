@@ -8,9 +8,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Oscar gösta viking",
   "license": "ISC",
   "dependencies": {
-    "exifr": "^7.1.3"
+    "express": "^4.18.2",
+    "mysql2": "^3.6.5"
   }
 }
