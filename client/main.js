@@ -117,9 +117,8 @@ function outputMusicResult(songs, searchTerm) {
 
   // Loop through the found songs
   for (let song of songs) {
-    let meta = song.metadata;
+    let meta = song.musicmetadata;
     if (meta && meta.title && meta.artist && meta.album) {
-      let fileName = song.file; // Get the fileName
       // Construct HTML elements for each song
       html += `
       <section>
@@ -127,7 +126,7 @@ function outputMusicResult(songs, searchTerm) {
         <p><b>Artist:</b> ${meta.artist}</p>
         <p><b>Album:</b> ${meta.album}</p>
         <p>
-          <audio controls src="music/${fileName}"></audio>
+          <audio controls src="music/${song.musicFile}"></audio>
         </p>
       </section>
       `;
