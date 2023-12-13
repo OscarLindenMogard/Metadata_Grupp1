@@ -3,7 +3,7 @@ body {
 }
 
 img {
-  width: 200px;
+  width: 100%;
   float: right;
 }
 
@@ -89,7 +89,7 @@ button:hover {
 }
 
 #outerWrapper {
-  background-image: url(img/metadata-1.jpg);
+  background-image: url(imgHTML/metadata-1.jpg);
   background-attachment: fixed;
 }
 
