@@ -81,7 +81,7 @@ async function search() {
       if (cbValue === "music") {
         result = outputMusicResult(rawdata, searchTerm);
       }
-      else if (cbValue === "Powerpoint") {
+      else if (cbValue === "ppt") {
         result = outputPowerpointResult(rawdata, searchTerm);
       }
       else if (cbValue === "pdf") {
@@ -253,7 +253,7 @@ function outputpdfResult(pdfs, searchTerm) {
   for (let pdf of pdfs) {
 
     //Make database colum too meta
-    let meta = pdf.pdfMetadata.info;
+    let meta = pdf.pdfMetadata;
     
     // Get imageName form database to imageName
     let pdfName = pdf.pdfFile; 
@@ -262,9 +262,13 @@ function outputpdfResult(pdfs, searchTerm) {
     html += `<p>"${pdfName}"</p>`
     html += `
     <section>
-      <p><b>Title:</b> ${meta.Title}</p>
-      <p><b>Author:</b> ${meta.Author}</p>
-      <p>Open a PDF file here:<a href="/pdfs/${pdfName}" target="_blank">${meta.Title}</a>.</p>
+      <p><b>Title:</b> ${meta.title}</p>
+      <p><b>Author:</b> ${meta.author}</p>
+      <p><b>Creator:</b> ${meta.creator}</p>
+      <p><b>PDF Format Version:</b> ${meta.pdfformatversion}</p>
+      <p><b>Number of pages:</b> ${meta.numpages}</p>
+      <p><b>Text:</b> ${meta.text}</p>
+      <p>Open a PDF file here:<a href="/pdfs/${pdfName}" target="_blank">${meta.title}</a>.</p>
     </section>
     `;
     

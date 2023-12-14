@@ -200,7 +200,7 @@ app.get('/api/pdf/:searchTerm/:searchType', async (request, response) => {
   let sql = `
    SELECT * 
    FROM pdf
-   WHERE LOWER(pdfMetadata ->> '$.${searchType}') LIKE LOWER(?)
+   WHERE pdfMetadata ->> '$.${searchType}' LIKE ?
    LIMIT 10
   `;
 
