@@ -84,8 +84,12 @@ async function search() {
       else if (cbValue === "Powerpoint") {
         result = outputPowerpointResult(rawdata, searchTerm);
       }
+      else if (cbValue === "pdf") {
+        result = outputpdfResult(rawdata, searchTerm);
+      }
+      // this is for image
       else {
-        result = outputimage(rawdata, searchTerm);
+        result = outputimageResult(rawdata, searchTerm);
       }
       
     }
@@ -153,7 +157,7 @@ function outputPowerpointResult(powerpoints, searchTerm) {
   for (let ppt of powerpoints) {
     let meta = ppt.powerpointMetadata;
     if (meta && meta.title && meta.company) {
-      // let fileName = ppt.file; // Get the fileName
+      let fileName = ppt.file; // Get the fileName
       // Construct HTML elements for each ppt
       html += `
       <section>
@@ -207,7 +211,7 @@ function outputAllResult(allresults, searchTerm) {
 }
 
 //this is output if you search for images
-function outputimage(images, searchTerm) {
+function outputimageResult(images, searchTerm) {
   // Create an empty string to hold HTML content
   let html = `
   <p>You searched for "${searchTerm}"...</p>
@@ -230,6 +234,37 @@ function outputimage(images, searchTerm) {
       <img src="/Image/${imageName}">
       <p><b>Phone maker:</b> ${meta.Make}</p>
       <p><b>Phone model:</b> ${meta.Model}</p>
+    </section>
+    `;
+    
+  }
+  //send to the website 
+  return html;
+}
+
+function outputpdfResult(pdfs, searchTerm) {
+  // Create an empty string to hold HTML content
+  let html = `
+  <p>You searched for "${searchTerm}"...</p>
+  <p>Found ${pdfs.length} Images.</p>
+  `;
+
+  // Loop through the found images
+  for (let pdf of pdfs) {
+
+    //Make database colum too meta
+    let meta = pdf.pdfMetadata.info;
+    
+    // Get imageName form database to imageName
+    let pdfName = pdf.pdfFile; 
+
+    // Construct HTML elements for each image
+    html += `<p>"${pdfName}"</p>`
+    html += `
+    <section>
+      <p><b>Title:</b> ${meta.Title}</p>
+      <p><b>Author:</b> ${meta.Author}</p>
+      <p>Open a PDF file here:<a href="/pdfs/${pdfName}" target="_blank">${meta.Title}</a>.</p>
     </section>
     `;
     
