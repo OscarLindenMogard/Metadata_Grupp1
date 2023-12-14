@@ -81,12 +81,13 @@ async function search() {
       if (cbValue === "music") {
         result = outputMusicResult(rawdata, searchTerm);
       }
-      else if (cbValue === "music") {
+      else if (cbValue === "Powerpoint") {
         result = outputPowerpointResult(rawdata, searchTerm);
       }
       else {
         result = outputimage(rawdata, searchTerm);
       }
+      
     }
 
     // Grab the element/tag with the class searchResults

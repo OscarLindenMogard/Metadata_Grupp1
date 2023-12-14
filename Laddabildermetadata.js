@@ -22,28 +22,28 @@ async function query(sql, listOfValues) {
 }
 
 // give me a list of all files in the image folder
-let images = fs.readdirSync('client/Image/');
+let images = fs.readdirSync('client/bilder/');
 
 // Loop through the images and extract the metadata
 for (let image of images) {
   // Only for files ending with .jpg
   // slice(-4) get the last 4 letters from the image name
   if (
-    image.slice(-4) == '.JPG'
+    image.slice(-4) == '.jpg'
     ) 
     {
-    let metadata = await exifr.parse('client/Image/' + image);
+    let metadata = await exifr.parse('client/bilder/' + image);
     
-    console.log('IMAGE: ' + image);
-    console.log(metadata)
+    // console.log('IMAGE: ' + image);
+    // console.log(metadata)
     
     // Insert JSON into DB (powerpoint). uncomment this if you want to insert into DB
-    //  let result = await query(`
-    //   INSERT INTO image (imageFile, imageMetadata)
-    //    VALUES(?, ?)
-    //   `, [image, metadata]);
+     let result = await query(`
+      INSERT INTO image (imageFile, imageMetadata)
+       VALUES(?, ?)
+      `, [image, metadata]);
 
-    //   console.log(result);
+      console.log(result);
   }
 }
-// process.exit();
+process.exit();
