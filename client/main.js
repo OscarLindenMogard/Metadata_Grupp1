@@ -246,7 +246,7 @@ function outputpdfResult(pdfs, searchTerm) {
   // Create an empty string to hold HTML content
   let html = `
   <p>You searched for "${searchTerm}"...</p>
-  <p>Found ${pdfs.length} Images.</p>
+  <p>Found ${pdfs.length} PDFs.</p>
   `;
 
   // Loop through the found images
@@ -259,16 +259,14 @@ function outputpdfResult(pdfs, searchTerm) {
     let pdfName = pdf.pdfFile; 
 
     // Construct HTML elements for each image
-    html += `<p>"${pdfName}"</p>`
     html += `
     <section>
-      <p><b>Title:</b> ${meta.title}</p>
-      <p><b>Author:</b> ${meta.author}</p>
-      <p><b>Creator:</b> ${meta.creator}</p>
+      <p><b>Title:</b> ${(meta.title || "<b>unknown</b>")}</p>
+      <p><b>Author:</b> ${(meta.author || "<b>unknown</b>")}</p>
+      <p><b>Creator:</b> ${(meta.creator || "<b>unknown</b>")}</p>
       <p><b>PDF Format Version:</b> ${meta.pdfformatversion}</p>
       <p><b>Number of pages:</b> ${meta.numpages}</p>
-      <p><b>Text:</b> ${meta.text}</p>
-      <p>Open a PDF file here:<a href="/pdfs/${pdfName}" target="_blank">${meta.title}</a>.</p>
+      <p>Open a PDF file here:<a href="/pdfs/${pdfName}" target="_blank">${pdfName}</a>.</p>
     </section>
     `;
     
