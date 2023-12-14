@@ -50,9 +50,12 @@ async function search() {
   } else if (cbValue === "pdf") {
     searchType = document.forms.searchForm.searchTypePdf.value;
     path = "pdf";
-  } else {
+  } else if (cbValue === "ppt"){
     searchType = document.forms.searchForm.searchTypeppt.value;
     path = "powerpoint";
+  } else {
+    searchType = document.forms.searchForm.searchTypeimage.value;
+    path = "image";
   }
 
   // Empty the input field
@@ -78,8 +81,11 @@ async function search() {
       if (cbValue === "music") {
         result = outputMusicResult(rawdata, searchTerm);
       }
-      else {
+      else if (cbValue === "music") {
         result = outputPowerpointResult(rawdata, searchTerm);
+      }
+      else {
+        result = outputimage(rawdata, searchTerm);
       }
     }
 
@@ -196,5 +202,37 @@ function outputAllResult(allresults, searchTerm) {
       `;
     }
   }
+  return html;
+}
+
+//this is output if you search for images
+function outputimage(images, searchTerm) {
+  // Create an empty string to hold HTML content
+  let html = `
+  <p>You searched for "${searchTerm}"...</p>
+  <p>Found ${images.length} Images.</p>
+  `;
+
+  // Loop through the found images
+  for (let image of images) {
+
+    //Make database colum too meta
+    let meta = image.imageMetadata;
+    
+    // Get imageName form database to imageName
+    let imageName = image.imageFile; 
+
+    // Construct HTML elements for each image
+    html += `<p>"${imageName}"</p>`
+    html += `
+    <section>
+      <img src="/Image/${imageName}">
+      <p><b>Phone maker:</b> ${meta.Make}</p>
+      <p><b>Phone model:</b> ${meta.Model}</p>
+    </section>
+    `;
+    
+  }
+  //send to the website 
   return html;
 }

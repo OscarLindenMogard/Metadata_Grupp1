@@ -34,16 +34,16 @@ for (let image of images) {
     {
     let metadata = await exifr.parse('client/Image/' + image);
     
-    // console.log('IMAGE: ' + image);
-    // console.log(metadata)
+    console.log('IMAGE: ' + image);
+    console.log(metadata)
     
     // Insert JSON into DB (powerpoint). uncomment this if you want to insert into DB
-     let result = await query(`
-      INSERT INTO image (imageFile, imageMetadata)
-       VALUES(?, ?)
-      `, [image, metadata]);
+    //  let result = await query(`
+    //   INSERT INTO image (imageFile, imageMetadata)
+    //    VALUES(?, ?)
+    //   `, [image, metadata]);
 
-      console.log(result);
+    //   console.log(result);
   }
 }
-process.exit();
+// process.exit();

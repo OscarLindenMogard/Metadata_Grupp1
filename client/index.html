@@ -12,16 +12,21 @@
   <div id="outerWrapper">
     <div id="wrapper">
       <form name="searchForm" onsubmit="search(); return false">
+        <!-- The searchbar -->
         <input name="term" placeholder="Search term">
+        <!-- Searchbutton -->
         <button type="submit">Search</button>
+        <!-- checkboxes to select what filetype you want to search for -->
         <p class="checkboxes">
+          <input onchange="checkboxChange(this);" type="checkbox" id="all" name="checkboxfilter" value="all">All</input>
           <input onchange="checkboxChange(this);" type="checkbox" id="music" name="checkboxfilter" value="music">Music</input>
+          <input onchange="checkboxChange(this);" type="checkbox" id="image" name="checkboxfilter" value="image">Image</input>
           <input onchange="checkboxChange(this);" type="checkbox" id="ppt" name="checkboxfilter" value="ppt">Powerpoint</input>
           <input onchange="checkboxChange(this);" type="checkbox" id="pdf" name="checkboxfilter" value="pdf">PDF</input>
-          <input onchange="checkboxChange(this);" type="checkbox" id="all" name="checkboxfilter" value="all">All</input>
         </p>
 
         <p>
+          <!-- drop down bar for music -->
         <div id="musicFilter" style="display:none;">
           Filter music:
           <select name="searchTypemusic">
@@ -31,6 +36,7 @@
             <option value="title">Track name</option>
           </select>
         </div>
+        <!-- drop down bar for Powerpoints -->
         <div id="pptFilter" style="display:none;">
           Filter powerpoint:
           <select name="searchTypeppt">
@@ -39,6 +45,7 @@
             <option value="company">Company</option>
           </select>
         </div>
+        <!-- drop down bar for PDFfiler -->
         <div id="pdfFilter" style="display:none;">
           Filter PDF:
           <select name="searchTypePdf">
@@ -47,10 +54,20 @@
             <option value="company">Author</option>
           </select>
         </div>
+        <!-- drop down bar for everything -->
         <div id="allFilter" style="display:none;">
           Filter:
           <select name="searchTypeall">
             <option value="all">All</option>
+          </select>
+        </div>
+        <!-- drop down bar for image -->
+        <div id="imageFilter" style="display:none;">
+          Filter Images:
+          <select name="searchTypeimage">
+            <option value="all">All</option>
+            <option value="make">Phone company</option>
+            <option value="model">model</option>
           </select>
         </div>
         </p>
