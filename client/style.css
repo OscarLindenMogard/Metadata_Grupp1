@@ -1,5 +1,6 @@
 body {
-  font-family: Verdana;
+  font-family: 'Times New Roman', Times, serif;
+  color:#e5d8d8;
 }
 
 img {
@@ -19,7 +20,7 @@ h2 {
 }
 
 h1 {
-  color: rgb(9, 132, 188);
+  color: rgba(112, 152, 171, 0.324);
   size: 40px;
 }
 
@@ -85,7 +86,6 @@ button:hover {
   margin-right: auto;
   background-color: #0e2c60;
   min-height: 700px;
-  opacity: 0.85;
 }
 
 #outerWrapper {
