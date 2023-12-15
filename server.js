@@ -187,3 +187,36 @@ app.get('/api/image/:searchTerm/:searchType', async (request, response) => {
   // Send a response to the client
   response.json(result);
 });
+
+// If you search in category image than you will come here.
+app.get('/api/pdf/:searchTerm/:searchType', async (request, response) => {
+  // Get the search term from as a parameter from the route/url
+  let searchTerm = request.params.searchTerm;
+  // Get the search type a sa parameter from the route/url
+  let searchType = request.params.searchType;
+  // Make a database query and remember the result
+  // using the search term
+
+  let sql = `
+   SELECT * 
+   FROM pdf
+   WHERE pdfMetadata ->> '$.${searchType}' LIKE ?
+   LIMIT 10
+  `;
+
+  // since the sql gets a bit different if you want to search all
+  // fix this with a if-clause replacing the sql
+  if (searchType == 'all') {
+    sql = `
+      SELECT *
+      FROM pdf
+      WHERE LOWER(pdfMetadata) LIKE LOWER(?)
+      LIMIT 10
+    `;
+  }
+
+  let result = await query(sql, ['%' + searchTerm + '%']);
+
+  // Send a response to the client
+  response.json(result);
+});

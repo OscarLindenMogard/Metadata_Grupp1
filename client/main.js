@@ -81,11 +81,15 @@ async function search() {
       if (cbValue === "music") {
         result = outputMusicResult(rawdata, searchTerm);
       }
-      else if (cbValue === "Powerpoint") {
+      else if (cbValue === "ppt") {
         result = outputPowerpointResult(rawdata, searchTerm);
       }
+      else if (cbValue === "pdf") {
+        result = outputpdfResult(rawdata, searchTerm);
+      }
+      // this is for image
       else {
-        result = outputimage(rawdata, searchTerm);
+        result = outputimageResult(rawdata, searchTerm);
       }
       
     }
@@ -153,7 +157,7 @@ function outputPowerpointResult(powerpoints, searchTerm) {
   for (let ppt of powerpoints) {
     let meta = ppt.powerpointMetadata;
     if (meta && meta.title && meta.company) {
-      // let fileName = ppt.file; // Get the fileName
+      let fileName = ppt.file; // Get the fileName
       // Construct HTML elements for each ppt
       html += `
       <section>
@@ -207,7 +211,7 @@ function outputAllResult(allresults, searchTerm) {
 }
 
 //this is output if you search for images
-function outputimage(images, searchTerm) {
+function outputimageResult(images, searchTerm) {
   // Create an empty string to hold HTML content
   let html = `
   <p>You searched for "${searchTerm}"...</p>
@@ -230,6 +234,39 @@ function outputimage(images, searchTerm) {
       <img src="/Image/${imageName}">
       <p><b>Phone maker:</b> ${meta.Make}</p>
       <p><b>Phone model:</b> ${meta.Model}</p>
+    </section>
+    `;
+    
+  }
+  //send to the website 
+  return html;
+}
+
+function outputpdfResult(pdfs, searchTerm) {
+  // Create an empty string to hold HTML content
+  let html = `
+  <p>You searched for "${searchTerm}"...</p>
+  <p>Found ${pdfs.length} PDFs.</p>
+  `;
+
+  // Loop through the found images
+  for (let pdf of pdfs) {
+
+    //Make database colum too meta
+    let meta = pdf.pdfMetadata;
+    
+    // Get imageName form database to imageName
+    let pdfName = pdf.pdfFile; 
+
+    // Construct HTML elements for each image
+    html += `
+    <section>
+      <p><b>Title:</b> ${(meta.title || "<b>unknown</b>")}</p>
+      <p><b>Author:</b> ${(meta.author || "<b>unknown</b>")}</p>
+      <p><b>Creator:</b> ${(meta.creator || "<b>unknown</b>")}</p>
+      <p><b>PDF Format Version:</b> ${meta.pdfformatversion}</p>
+      <p><b>Number of pages:</b> ${meta.numpages}</p>
+      <p>Open a PDF file here:<a href="/pdfs/${pdfName}" target="_blank">${pdfName}</a>.</p>
     </section>
     `;
     
