@@ -91,6 +91,7 @@ button:hover {
 #outerWrapper {
   background-image: url(imgHTML/metadata-1.jpg);
   background-attachment: fixed;
+  width: 100%;
 }
 
 [type="checkbox"] {

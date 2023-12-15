@@ -148,22 +148,39 @@ function outputMusicResult(songs, searchTerm) {
 
 function outputPowerpointResult(powerpoints, searchTerm) {
   // Create an empty string to hold HTML content
-  let html = `
-  <p>You searched for "${searchTerm}"...</p>
-  <p>Found ${powerpoints.length} powerpoints.</p>
-  `;
+  let html = '';
+  if (powerpoints.length < 1){
+    html += `
+    <p>You searched for "${searchTerm}"...</p>
+    <p>and does not exist :(</p>
+    `;
+  }
+  else if (powerpoints.length === 1){
+    html += `
+      <p>You searched for "${searchTerm}"...</p>
+      <p>Found ${powerpoints.length} powerpoint.</p>
+    `;
+  }
+  else {
+    html += `
+      <p>You searched for "${searchTerm}"...</p>
+      <p>Found ${powerpoints.length} powerpoints.</p>
+    `;
+  }
 
   // Loop through the found songs
   for (let ppt of powerpoints) {
     let meta = ppt.powerpointMetadata;
+    let fileName = ppt.powerpointFile
+
     if (meta && meta.title && meta.company) {
-      let fileName = ppt.file; // Get the fileName
       // Construct HTML elements for each ppt
       html += `
       <section>
         <h2>${meta.title}</h2>
         <p><b>Title:</b> ${meta.title}</p>
         <p><b>Company:</b> ${meta.company}</p>
+        <p><b>slides:</b> ${meta.slide_count}</p>
       </section>
       `;
     }
