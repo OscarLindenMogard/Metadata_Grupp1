@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click on map - search images</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+            <h1>Search by map</h1>
+            <p>Click a location on the map and also choose a radius for your search:</p>
+            <form name="mapForm" onclick="return false">
+                <select name="radius">
+                    <option value="10">10 km</option>
+                    <option value="100">100 km</option>
+                    <option value="1000">1000 km</option>
+                </select>
+                <button onclick="searchGeo()" type="submit">Search</button>
+            </form>
+            <div id="map"></div>
+            <article class="searchResult">
+                <!-- Show search results here-->
+            </article>
+            <script src="geo.js"></script>
+            <script AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"></script>
+</body>
+
+</html>

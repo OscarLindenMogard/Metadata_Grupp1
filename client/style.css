@@ -113,3 +113,22 @@ button:hover {
   margin-left: auto;
   margin-right: auto;
 }
+
+.button-download {
+  background-color: #303133;
+}
+
+.image-result{
+  max-width: 40%;
+}
+
+#map {
+  height: 600px;
+  width: 700px;
+  overflow: visible;
+}
+
+#mapFrame {
+  width: 100%;
+  min-height: 500px;
+}

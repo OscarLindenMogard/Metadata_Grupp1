@@ -16,8 +16,8 @@ app.use(express.static('client'));
 
 // Start the server on a certain port
 // and write to the terminal which port...
-app.listen(3000, () =>
-  console.log('Listening on http://localhost:3000'));
+app.listen(5173, () =>
+  console.log('Listening on http://localhost:5173'));
 
 
 
@@ -29,6 +29,13 @@ const db = await mysql.createConnection({
   password: 'guessagain91',
   database: 'Gruppuppgift'
 });
+
+// const server = express();
+
+// server.use(express.static('client'));
+
+// server.listen(5173, () => console.log('Listening on http://localhost:5173'));
+
 
 // A small function for a database query
 async function query(sql, listOfValues) {
@@ -70,7 +77,6 @@ function ImportPowerointToMySql() {
 
   }
 }
-
 
 // A search route to find music
 app.get('/api/music/:searchTerm/:searchType', async (request, response) => {
@@ -218,5 +224,18 @@ app.get('/api/pdf/:searchTerm/:searchType', async (request, response) => {
   let result = await query(sql, ['%' + searchTerm + '%']);
 
   // Send a response to the client
+  response.json(result);
+});
+
+// For the harder / more advanced example
+app.get('/api/map-image-search/:latitude/:longitude/:radius', async (request, response) => {
+  let latitude = request.params.latitude;
+  let longitude = request.params.longitude;
+  let radius = request.params.radius;
+  let result = await query(`
+    SELECT * FROM (
+      SELECT *,(((acos(sin((?*pi()/180)) * sin((imageMetadata -> '$.latitude' *pi()/180))+cos((?*pi()/180)) * cos((imageMetadata -> '$.latitude' * pi()/180)) * cos(((? - imageMetadata -> '$.longitude')*pi()/180))))*180/pi())*60*1.1515*1.609344) as distance FROM image) AS subquery
+    WHERE distance <= ?
+  `, [latitude, latitude, longitude, radius]);
   response.json(result);
 });

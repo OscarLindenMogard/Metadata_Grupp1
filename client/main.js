@@ -29,6 +29,24 @@ function checkboxChange(cb) {
   }
 }
 
+// Check on change if map is selected and show the iframe with the google map
+function checkForMap(opt){
+  console.log("checkForMap", opt.value);
+  let val = opt.value;
+  let googlemap = document.getElementById("mapFrame");
+  if(val === "map"){
+   
+    if(googlemap){
+      googlemap.style.display = "block";
+    }
+  } else {
+    if(googlemap){
+      googlemap.style.display = "none";
+    }
+  }
+
+}
+
 // Declare a new function named search
 async function search() {
   // Read the user input from the term field in the form searchForm
@@ -50,7 +68,7 @@ async function search() {
   } else if (cbValue === "pdf") {
     searchType = document.forms.searchForm.searchTypePdf.value;
     path = "pdf";
-  } else if (cbValue === "ppt"){
+  } else if (cbValue === "ppt") {
     searchType = document.forms.searchForm.searchTypeppt.value;
     path = "powerpoint";
   } else {
@@ -85,13 +103,13 @@ async function search() {
         result = outputPowerpointResult(rawdata, searchTerm);
       }
       else if (cbValue === "pdf") {
-        result = outputpdfResult(rawdata, searchTerm);
+        result = outputPdfResult(rawdata, searchTerm);
       }
       // this is for image
       else {
-        result = outputimageResult(rawdata, searchTerm);
+        result = outputImageResult(rawdata, searchTerm);
       }
-      
+
     }
 
     // Grab the element/tag with the class searchResults
@@ -148,24 +166,13 @@ function outputMusicResult(songs, searchTerm) {
 
 function outputPowerpointResult(powerpoints, searchTerm) {
   // Create an empty string to hold HTML content
-  let html = '';
-  if (powerpoints.length < 1){
-    html += `
-    <p>You searched for "${searchTerm}"...</p>
-    <p>and does not exist :(</p>
-    `;
-  }
-  else if (powerpoints.length === 1){
-    html += `
-      <p>You searched for "${searchTerm}"...</p>
-      <p>Found ${powerpoints.length} powerpoint.</p>
-    `;
+  let html = `<p>You searched for "${searchTerm}"...</p>`;
+  if (powerpoints.length < 1) {
+    html += `<p>No results found.</p>`;
   }
   else {
-    html += `
-      <p>You searched for "${searchTerm}"...</p>
-      <p>Found ${powerpoints.length} powerpoints.</p>
-    `;
+    let pptText = powerpoints.length === 1 ? 'powerpoint' : 'powerpoints';
+    html += `<p>Found ${powerpoints.length} ${pptText}.</p>`;
   }
 
   // Loop through the found songs
@@ -181,6 +188,9 @@ function outputPowerpointResult(powerpoints, searchTerm) {
         <p><b>Title:</b> ${meta.title}</p>
         <p><b>Company:</b> ${meta.company}</p>
         <p><b>slides:</b> ${meta.slide_count}</p>
+        <a href="./powerpoints/${fileName}" download="${fileName}">
+        <button class="button-download" type="button">Download file</button>
+        </a>
       </section>
       `;
     }
@@ -228,7 +238,7 @@ function outputAllResult(allresults, searchTerm) {
 }
 
 //this is output if you search for images
-function outputimageResult(images, searchTerm) {
+function outputImageResult(images, searchTerm) {
   // Create an empty string to hold HTML content
   let html = `
   <p>You searched for "${searchTerm}"...</p>
@@ -240,26 +250,29 @@ function outputimageResult(images, searchTerm) {
 
     //Make database colum too meta
     let meta = image.imageMetadata;
-    
-    // Get imageName form database to imageName
-    let imageName = image.imageFile; 
 
+    // Get imageName form database to imageName
+    let imageName = image.imageFile;
     // Construct HTML elements for each image
-    html += `<p>"${imageName}"</p>`
     html += `
     <section>
-      <img src="/Image/${imageName}">
+      <p><b> Image name:</b>"${imageName}"</p>
+      <img class="image-result" src="/Image/${imageName}">
       <p><b>Phone maker:</b> ${meta.Make}</p>
+      <p><b>Latitude:</b> ${meta.latitude}</p>
       <p><b>Phone model:</b> ${meta.Model}</p>
+      <a href="./Image/${imageName}" download="${imageName}">
+        <button class="button-download" type="button">Download file</button>
+      </a>
     </section>
     `;
-    
+
   }
   //send to the website 
   return html;
 }
 
-function outputpdfResult(pdfs, searchTerm) {
+function outputPdfResult(pdfs, searchTerm) {
   // Create an empty string to hold HTML content
   let html = `
   <p>You searched for "${searchTerm}"...</p>
@@ -271,9 +284,9 @@ function outputpdfResult(pdfs, searchTerm) {
 
     //Make database colum too meta
     let meta = pdf.pdfMetadata;
-    
+
     // Get imageName form database to imageName
-    let pdfName = pdf.pdfFile; 
+    let pdfName = pdf.pdfFile;
 
     // Construct HTML elements for each image
     html += `
@@ -283,10 +296,10 @@ function outputpdfResult(pdfs, searchTerm) {
       <p><b>Creator:</b> ${(meta.creator || "<b>unknown</b>")}</p>
       <p><b>PDF Format Version:</b> ${meta.pdfformatversion}</p>
       <p><b>Number of pages:</b> ${meta.numpages}</p>
-      <p>Open a PDF file here:<a href="/pdfs/${pdfName}" target="_blank">${pdfName}</a>.</p>
+      <p>Open PDF file in new tab:<a href="/pdfs/${pdfName}" target="_blank"> ${pdfName}</a>.</p>
     </section>
     `;
-    
+
   }
   //send to the website 
   return html;

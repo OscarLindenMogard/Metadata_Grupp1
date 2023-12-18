@@ -19,9 +19,12 @@
         <!-- checkboxes to select what filetype you want to search for -->
         <p class="checkboxes">
           <input onchange="checkboxChange(this);" type="checkbox" id="all" name="checkboxfilter" value="all">All</input>
-          <input onchange="checkboxChange(this);" type="checkbox" id="music" name="checkboxfilter" value="music">Music</input>
-          <input onchange="checkboxChange(this);" type="checkbox" id="image" name="checkboxfilter" value="image">Image</input>
-          <input onchange="checkboxChange(this);" type="checkbox" id="ppt" name="checkboxfilter" value="ppt">Powerpoint</input>
+          <input onchange="checkboxChange(this);" type="checkbox" id="music" name="checkboxfilter"
+            value="music">Music</input>
+          <input onchange="checkboxChange(this);" type="checkbox" id="image" name="checkboxfilter"
+            value="image">Image</input>
+          <input onchange="checkboxChange(this);" type="checkbox" id="ppt" name="checkboxfilter"
+            value="ppt">Powerpoint</input>
           <input onchange="checkboxChange(this);" type="checkbox" id="pdf" name="checkboxfilter" value="pdf">PDF</input>
         </p>
 
@@ -67,18 +70,21 @@
         <!-- drop down bar for image -->
         <div id="imageFilter" style="display:none;">
           Filter Images:
-          <select name="searchTypeimage">
+          <select onchange="checkForMap(this);" name="searchTypeimage">
             <option value="all">All</option>
             <option value="make">Phone company</option>
             <option value="model">model</option>
+            <option value="map">Find by map</option>
           </select>
         </div>
         </p>
       </form>
-
       <article class="searchResults">
         Select something to search for.
       </article>
+      <div id="mapFrame" style="display:none;">
+        <iframe src="geo.html" style="height:500px;width:100%;" title="Google map"></iframe>
+      </div>
     </div>
   </div>
   <script src="main.js"></script>
