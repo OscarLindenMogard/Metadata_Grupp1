@@ -78,6 +78,29 @@ function ImportPowerointToMySql() {
   }
 }
 
+// A search route to find all
+app.get('/api/all/:searchTerm', async (request, response) => {
+  // Get the search term from as a parameter from the route/url
+  let searchTerm = request.params.searchTerm;
+
+  let sql = `
+    SELECT *
+    FROM (
+      SELECT musicFile as File, musicMetadata as Metadata FROM (SELECT * FROM music WHERE LOWER(musicMetadata) LIKE LOWER(?) LIMIT 5) as musicData
+      UNION ALL
+      SELECT pdfFile, pdfMetadata FROM (SELECT * FROM pdf WHERE LOWER(pdfMetadata) LIKE LOWER(?) LIMIT 5) as pdfData
+      UNION ALL
+      SELECT powerpointFile, powerpointMetadata FROM (SELECT * FROM powerpoint WHERE LOWER(powerpointMetadata) LIKE LOWER(?)  LIMIT 5) as powerpointData
+      UNION ALL
+      SELECT imageFile, imageMetadata FROM (SELECT * FROM image WHERE LOWER(imagemetadata) LIKE LOWER(?) LIMIT 5) as imageData
+    ) Alldata
+  `;
+
+  let result = await query(sql, ['%' + searchTerm + '%', '%' + searchTerm + '%', '%' + searchTerm + '%', '%' + searchTerm + '%']);
+  
+  response.json(result);
+});
+
 // A search route to find music
 app.get('/api/music/:searchTerm/:searchType', async (request, response) => {
   // Get the search term from as a parameter from the route/url
@@ -144,22 +167,6 @@ app.get('/api/powerpoint/:searchTerm/:searchType', async (request, response) => 
   response.json(result);
 });
 
-
-
-// A search route to find all
-app.get('/api/all', async (request, response) => {
-  console.log('ALL SP called:');
-
-  db.query('CALL sp_getAll()',function(err, rows){
-    if (err) throw err;
-  
-    console.log('Data received from Db:');
-    console.log(rows);
-  });
-
-  // Send a response to the client
-  response.json(rows);
-});
 
 // If you search in category image than you will come here.
 app.get('/api/image/:searchTerm/:searchType', async (request, response) => {

@@ -54,17 +54,26 @@ async function search() {
   //Get checkboxfilter and select searchtype from that
   var checkboxFilter = document.querySelector('input[name=checkboxfilter]:checked');
 
-  let cbValue = checkboxFilter.value
+  let cbValue;
   let searchType;
   let path;
+
+  if (checkboxFilter) {
+    console.log("checkbox filter")
+    cbValue = checkboxFilter.value; 
+    console.log(cbValue);
+  } else {
+    console.log("cbvalue=all")
+    cbValue = "all"; 
+  }
 
   // Read the searchType depending on the checkbox value
   if (cbValue === "music") {
     searchType = document.forms.searchForm.searchTypemusic.value;
     path = "music";
-  } else if (cbValue === "all") {
-    searchType = document.forms.searchForm.searchTypeall.value;
-    path = "all";
+  }  else if (cbValue === "image") {
+    searchType = document.forms.searchForm.searchTypeimage.value;
+    path = "image";
   } else if (cbValue === "pdf") {
     searchType = document.forms.searchForm.searchTypePdf.value;
     path = "pdf";
@@ -72,23 +81,26 @@ async function search() {
     searchType = document.forms.searchForm.searchTypeppt.value;
     path = "powerpoint";
   } else {
-    searchType = document.forms.searchForm.searchTypeimage.value;
-    path = "image";
+    searchType = document.forms.searchForm.searchTypeall.value;
+    path = "all";
   }
-
+  console.log(path)
   // Empty the input field
   document.forms.searchForm.term.value = '';
   try {
-
     let result;
     let rawdata;
-    if (cbValue === "all") {
-      //TODO: Make the search for all work..
-      result = `
-      <p>You searched for "${searchTerm}"... but the search functionality is not implemented yet</p>
-      `;
-      //result = await fetchAll(path, searchTerm);
-    } else {
+    if (path == "all"){
+      console.log("all")
+      let rawData = await fetch(`/api/all/${searchTerm}`);
+      if (!rawData.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      let rawdata = await rawData.json();
+      result = outputAllResult(rawdata, searchTerm);
+    } 
+    else {
+      console.log("hehe")
       // Read the JSON data using fetch
       let rawData = await fetch(`/api/${path}/${searchTerm}/${searchType}`);
       if (!rawData.ok) {
@@ -109,7 +121,6 @@ async function search() {
       else {
         result = outputImageResult(rawdata, searchTerm);
       }
-
     }
 
     // Grab the element/tag with the class searchResults
@@ -123,18 +134,88 @@ async function search() {
   }
 }
 
-async function fetchAll(path, searchTerm) {
-  try {
-    let rawData = await fetch(`/api/${path}`);
-    if (!rawData.ok) {
-      throw new Error('Failed to fetch data');
+// async function fetchAll(path, searchTerm) {
+//   try {
+//     let rawData = await fetch(`/api/${path}`);
+//     if (!rawData.ok) {
+//       throw new Error('Failed to fetch data');
+//     }
+//     let rawdata = await rawData.json();
+//     return outputAllResult(rawdata, searchTerm);
+//   } catch (error) {
+//     console.error('Error fetching data:', error);
+//     // Handle the error - display a message to the user or retry the request.
+//   }
+// }
+
+function outputAllResult(alldata, searchTerm) {
+  // Create an empty string to hold HTML content
+  let html = `
+  <p>You searched for "${searchTerm}"...</p>
+  <p>Found ${alldata.length} results.</p>
+  `;
+
+  // Loop through the found songs
+  for (let data of alldata) {
+    let meta = data.Metadata;
+    let filename = data.File
+
+    if (filename.slice(-4) == '.mp3') {
+      html += `
+      <section>
+        <h2>${meta.title}</h2>
+        <p><b>Artist:</b> ${meta.artist}</p>
+        <p><b>Album:</b> ${meta.album}</p>
+        <p>
+          <audio controls src="music/${filename}"></audio>
+        </p>
+      </section>
+      `;
+    } 
+    else if (filename.slice(-4) == '.ppt') {
+      html += `
+      <section>
+        <h2>${meta.title}</h2>
+        <p><b>Title:</b> ${meta.title}</p>
+        <p><b>Company:</b> ${meta.company}</p>
+        <p><b>slides:</b> ${meta.slide_count}</p>
+        <a href="./powerpoints/${filename}" download="${filename}">
+        <button class="button-download" type="button">Download file</button>
+        </a>
+      </section>
+      `;
+    } 
+    else if (filename.slice(-4) == '.pdf') {
+      html += `
+      <section>
+        <p><b>Title:</b> ${(meta.title || "<b>unknown</b>")}</p>
+        <p><b>Author:</b> ${(meta.author || "<b>unknown</b>")}</p>
+        <p><b>Creator:</b> ${(meta.creator || "<b>unknown</b>")}</p>
+        <p><b>PDF Format Version:</b> ${meta.pdfformatversion}</p>
+        <p><b>Number of pages:</b> ${meta.numpages}</p>
+        <p>Open PDF file in new tab:<a href="/pdfs/${filename}" target="_blank"> ${filename}</a>.</p>
+      </section>
+      `;
+    } 
+    else {
+      html += `
+      <section>
+        <p><b> Image name:</b>"${filename}"</p>
+        <img class="image-result" src="/Image/${filename}">
+        <p><b>Phone maker:</b> ${meta.Make}</p>
+        <p><b>Latitude:</b> ${meta.latitude}</p>
+        <p><b>Phone model:</b> ${meta.Model}</p>
+        <a href="./Image/${filename}" download="${filename}">
+          <button class="button-download" type="button">Download file</button>
+        </a>
+      </section>
+      `;
     }
-    let rawdata = await rawData.json();
-    return outputAllResult(rawdata, searchTerm);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    // Handle the error - display a message to the user or retry the request.
+    
+    
+    
   }
+  return html;
 }
 
 function outputMusicResult(songs, searchTerm) {
@@ -198,44 +279,7 @@ function outputPowerpointResult(powerpoints, searchTerm) {
   return html;
 }
 
-function outputAllResult(allresults, searchTerm) {
-  // Create an empty string to hold HTML content
-  let html = `
-  <p>You searched for "${searchTerm}"...</p>
-  <p>Found ${allresults.length} results.</p>
-  `;
 
-  // Loop through the found songs
-  for (let res of allresults) {
-    let meta = res.powerpointMetadata;
-    let metaSong = res.metadata;
-    if (meta && meta.title && meta.company) {
-      // Construct HTML elements for each result
-      html += `
-      <section>
-        <h2>${meta.title}</h2>
-        <p><b>Title:</b> ${meta.title}</p>
-        <p><b>Company:</b> ${meta.company}</p>
-      </section>
-      `;
-    }
-    if (metaSong && metaSong.title && metaSong.artist && metaSong.album) {
-      let fileName = res.file; // Get the fileName
-      // Construct HTML elements for each song
-      html += `
-      <section>
-        <h2>${metaSong.title}</h2>
-        <p><b>Artist:</b> ${metaSong.artist}</p>
-        <p><b>Album:</b> ${metaSong.album}</p>
-        <p>
-          <audio controls src="music/${fileName}"></audio>
-        </p>
-      </section>
-      `;
-    }
-  }
-  return html;
-}
 
 //this is output if you search for images
 function outputImageResult(images, searchTerm) {
