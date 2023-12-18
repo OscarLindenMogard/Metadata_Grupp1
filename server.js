@@ -210,25 +210,35 @@ app.get('/api/pdf/:searchTerm/:searchType', async (request, response) => {
   // Make a database query and remember the result
   // using the search term
 
+  let terms = searchTerm.split(' ').map(function(term) { return `%${term}%`; });
+  
+  let filter = terms.map(function(value) {
+    return `LOWER(pdfMetadata ->> '$.${searchType}') LIKE LOWER(?)`
+  }).join(" AND ");
+
   let sql = `
    SELECT * 
    FROM pdf
-   WHERE pdfMetadata ->> '$.${searchType}' LIKE ?
+   WHERE ${filter}
    LIMIT 10
   `;
 
   // since the sql gets a bit different if you want to search all
   // fix this with a if-clause replacing the sql
   if (searchType == 'all') {
+    let filter = terms.map(function(value) {
+      return `LOWER(pdfMetadata) LIKE LOWER(?)`
+    }).join(" AND ");
+    
     sql = `
       SELECT *
       FROM pdf
-      WHERE LOWER(pdfMetadata) LIKE LOWER(?)
+      WHERE ${filter}
       LIMIT 10
     `;
   }
 
-  let result = await query(sql, ['%' + searchTerm + '%']);
+  let result = await query(sql, terms);
 
   // Send a response to the client
   response.json(result);
