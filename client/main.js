@@ -2,6 +2,8 @@ function checkboxChange(cb) {
   //Get the value of the checkbox selected
   let cbValue = cb.value;
 
+  setMapVisible(false);
+
   //Get all checkboxe elements
   var allCheckboxes = document.querySelectorAll('input[name=checkboxfilter]');
   // Loop the checkboxes
@@ -27,24 +29,30 @@ function checkboxChange(cb) {
       }
     }
   }
+
+  if (cbValue === "image") {
+    checkForMap();
+  }
+}
+
+function setMapVisible(isVisible) {
+  let googlemap = document.getElementById("mapFrame");
+  
+  if (isVisible) {
+    googlemap.style.display = "block";
+  } else {
+    googlemap.style.display = "none";
+  }
 }
 
 // Check on change if map is selected and show the iframe with the google map
-function checkForMap(opt){
+function checkForMap(){
+  let opt = document.querySelector("select[name=searchTypeimage]");
+
   console.log("checkForMap", opt.value);
   let val = opt.value;
-  let googlemap = document.getElementById("mapFrame");
-  if(val === "map"){
-   
-    if(googlemap){
-      googlemap.style.display = "block";
-    }
-  } else {
-    if(googlemap){
-      googlemap.style.display = "none";
-    }
-  }
 
+  setMapVisible(val === "map");
 }
 
 // Declare a new function named search
