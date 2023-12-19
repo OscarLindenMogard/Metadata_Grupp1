@@ -217,27 +217,20 @@ app.get('/api/pdf/:searchTerm/:searchType', async (request, response) => {
     return `LOWER(pdfMetadata ->> '$.${searchType}') LIKE LOWER(?)`
   }).join(" AND ");
 
+  // since the sql gets a bit different if you want to search all
+  // fix this with a if-clause replacing the sql
+  if (searchType == 'all') {
+    filter = terms.map(function(value) {
+      return `LOWER(pdfMetadata) LIKE LOWER(?)`
+    }).join(" AND ");
+  }
+
   let sql = `
    SELECT * 
    FROM pdf
    WHERE ${filter}
    LIMIT 10
   `;
-
-  // since the sql gets a bit different if you want to search all
-  // fix this with a if-clause replacing the sql
-  if (searchType == 'all') {
-    let filter = terms.map(function(value) {
-      return `LOWER(pdfMetadata) LIKE LOWER(?)`
-    }).join(" AND ");
-    
-    sql = `
-      SELECT *
-      FROM pdf
-      WHERE ${filter}
-      LIMIT 10
-    `;
-  }
 
   let result = await query(sql, terms);
 
