@@ -28,6 +28,11 @@ function checkboxChange(cb) {
         filterElement.style.display = "none";
       }
     }
+    if (cbValue !== "image") {
+      hideMap("hide");
+    } else {
+      hideMap("map");
+    }
   }
 
   if (cbValue === "image") {
@@ -46,6 +51,7 @@ function setMapVisible(isVisible) {
 }
 
 // Check on change if map is selected and show the iframe with the google map
+<<<<<<< Updated upstream
 function checkForMap(){
   let opt = document.querySelector("select[name=searchTypeimage]");
 
@@ -53,6 +59,25 @@ function checkForMap(){
   let val = opt.value;
 
   setMapVisible(val === "map");
+=======
+function checkForMap(opt) {
+  console.log("checkForMap", JSON.stringify(opt.value));
+  let val = opt.value;
+  hideMap(val);
+}
+
+function hideMap(val) {
+  let googlemap = document.getElementById("mapFrame");
+  if (val === "map") {
+    if (googlemap) {
+      googlemap.style.display = "block";
+    }
+  } else {
+    if (googlemap) {
+      googlemap.style.display = "none";
+    }
+  }
+>>>>>>> Stashed changes
 }
 
 // Declare a new function named search
@@ -68,18 +93,23 @@ async function search() {
 
   if (checkboxFilter) {
     console.log("checkbox filter")
-    cbValue = checkboxFilter.value; 
+    cbValue = checkboxFilter.value;
     console.log(cbValue);
   } else {
+    cbValue = "all";
+    let cbAll = document.getElementById(cbValue);
+    if (cbAll) {
+      cbAll.checked = true;
+    }
     console.log("cbvalue=all")
-    cbValue = "all"; 
+
   }
 
   // Read the searchType depending on the checkbox value
   if (cbValue === "music") {
     searchType = document.forms.searchForm.searchTypemusic.value;
     path = "music";
-  }  else if (cbValue === "image") {
+  } else if (cbValue === "image") {
     searchType = document.forms.searchForm.searchTypeimage.value;
     path = "image";
   } else if (cbValue === "pdf") {
@@ -98,7 +128,7 @@ async function search() {
   try {
     let result;
     let rawdata;
-    if (path == "all"){
+    if (path == "all") {
       console.log("all")
       let rawData = await fetch(`/api/all/${searchTerm}`);
       if (!rawData.ok) {
@@ -106,7 +136,7 @@ async function search() {
       }
       let rawdata = await rawData.json();
       result = outputAllResult(rawdata, searchTerm);
-    } 
+    }
     else {
       console.log("hehe")
       // Read the JSON data using fetch
@@ -169,59 +199,17 @@ function outputAllResult(alldata, searchTerm) {
     let filename = data.File
 
     if (filename.slice(-4) == '.mp3') {
-      html += `
-      <section>
-        <h2>${meta.title}</h2>
-        <p><b>Artist:</b> ${meta.artist}</p>
-        <p><b>Album:</b> ${meta.album}</p>
-        <p>
-          <audio controls src="music/${filename}"></audio>
-        </p>
-      </section>
-      `;
-    } 
-    else if (filename.slice(-4) == '.ppt') {
-      html += `
-      <section>
-        <h2>${meta.title}</h2>
-        <p><b>Title:</b> ${meta.title}</p>
-        <p><b>Company:</b> ${meta.company}</p>
-        <p><b>slides:</b> ${meta.slide_count}</p>
-        <a href="./powerpoints/${filename}" download="${filename}">
-        <button class="button-download" type="button">Download file</button>
-        </a>
-      </section>
-      `;
-    } 
-    else if (filename.slice(-4) == '.pdf') {
-      html += `
-      <section>
-        <p><b>Title:</b> ${(meta.title || "<b>unknown</b>")}</p>
-        <p><b>Author:</b> ${(meta.author || "<b>unknown</b>")}</p>
-        <p><b>Creator:</b> ${(meta.creator || "<b>unknown</b>")}</p>
-        <p><b>PDF Format Version:</b> ${meta.pdfformatversion}</p>
-        <p><b>Number of pages:</b> ${meta.numpages}</p>
-        <p>Open PDF file in new tab:<a href="/pdfs/${filename}" target="_blank"> ${filename}</a>.</p>
-      </section>
-      `;
-    } 
-    else {
-      html += `
-      <section>
-        <p><b> Image name:</b>"${filename}"</p>
-        <img class="image-result" src="/Image/${filename}">
-        <p><b>Phone maker:</b> ${meta.Make}</p>
-        <p><b>Latitude:</b> ${meta.latitude}</p>
-        <p><b>Phone model:</b> ${meta.Model}</p>
-        <a href="./Image/${filename}" download="${filename}">
-          <button class="button-download" type="button">Download file</button>
-        </a>
-      </section>
-      `;
+      html += printMusicSection(filename, meta);
     }
-    
-    
-    
+    else if (filename.slice(-4) == '.ppt') {
+      html += printPowerpointSection(filename, meta);
+    }
+    else if (filename.slice(-4) == '.pdf') {
+      html += printPdfSection(filename, meta);
+    }
+    else {
+      html += printImageSection(filename, meta);
+    }
   }
   return html;
 }
@@ -237,19 +225,24 @@ function outputMusicResult(songs, searchTerm) {
   for (let song of songs) {
     let meta = song.musicmetadata;
     if (meta && meta.title && meta.artist && meta.album) {
-      // Construct HTML elements for each song
-      html += `
-      <section>
-        <h2>${meta.title}</h2>
-        <p><b>Artist:</b> ${meta.artist}</p>
-        <p><b>Album:</b> ${meta.album}</p>
-        <p>
-          <audio controls src="music/${song.musicFile}"></audio>
-        </p>
-      </section>
-      `;
+      html += printMusicSection(song.musicFile, meta);
     }
   }
+  return html;
+}
+
+function printMusicSection(fileName, meta) {
+  // Construct HTML elements for song object
+  let html = `
+  <section>
+    <h2>${meta.title}</h2>
+    <p><b>Artist:</b> ${meta.artist}</p>
+    <p><b>Album:</b> ${meta.album}</p>
+    <p>
+      <audio controls src="music/${fileName}"></audio>
+    </p>
+  </section>
+  `;
   return html;
 }
 
@@ -264,14 +257,21 @@ function outputPowerpointResult(powerpoints, searchTerm) {
     html += `<p>Found ${powerpoints.length} ${pptText}.</p>`;
   }
 
-  // Loop through the found songs
+  // Loop through the found powerpoints
   for (let ppt of powerpoints) {
     let meta = ppt.powerpointMetadata;
-    let fileName = ppt.powerpointFile
 
     if (meta && meta.title && meta.company) {
       // Construct HTML elements for each ppt
-      html += `
+      html += printPowerpointSection(ppt.powerpointFile, meta);
+    }
+  }
+  return html;
+}
+
+function printPowerpointSection(fileName, meta) {
+  // Construct HTML elements for powerpoint object
+  let html = `
       <section>
         <h2>${meta.title}</h2>
         <p><b>Title:</b> ${meta.title}</p>
@@ -282,12 +282,8 @@ function outputPowerpointResult(powerpoints, searchTerm) {
         </a>
       </section>
       `;
-    }
-  }
   return html;
 }
-
-
 
 //this is output if you search for images
 function outputImageResult(images, searchTerm) {
@@ -299,28 +295,27 @@ function outputImageResult(images, searchTerm) {
 
   // Loop through the found images
   for (let image of images) {
-
-    //Make database colum too meta
-    let meta = image.imageMetadata;
-
-    // Get imageName form database to imageName
-    let imageName = image.imageFile;
     // Construct HTML elements for each image
-    html += `
-    <section>
-      <p><b> Image name:</b>"${imageName}"</p>
-      <img class="image-result" src="/Image/${imageName}">
-      <p><b>Phone maker:</b> ${meta.Make}</p>
-      <p><b>Latitude:</b> ${meta.latitude}</p>
-      <p><b>Phone model:</b> ${meta.Model}</p>
-      <a href="./Image/${imageName}" download="${imageName}">
-        <button class="button-download" type="button">Download file</button>
-      </a>
-    </section>
-    `;
-
+    html += printImageSection(image.imageFile, image.imageMetadata);
   }
   //send to the website 
+  return html;
+}
+
+function printImageSection(fileName, meta) {
+  // Construct HTML elements for Image object
+  let html = `
+      <section>
+        <p><b> Image name:</b>"${fileName}"</p>
+        <img class="image-result" src="/Image/${fileName}">
+        <p><b>Phone maker:</b> ${meta.Make}</p>
+        <p><b>Latitude:</b> ${meta.latitude}</p>
+        <p><b>Phone model:</b> ${meta.Model}</p>
+        <a href="./Image/${fileName}" download="${fileName}">
+          <button class="button-download" type="button">Download file</button>
+        </a>
+      </section>
+      `;
   return html;
 }
 
@@ -331,28 +326,28 @@ function outputPdfResult(pdfs, searchTerm) {
   <p>Found ${pdfs.length} PDFs.</p>
   `;
 
-  // Loop through the found images
+  // Loop through the found Pdfs
   for (let pdf of pdfs) {
 
-    //Make database colum too meta
-    let meta = pdf.pdfMetadata;
-
-    // Get imageName form database to imageName
-    let pdfName = pdf.pdfFile;
-
-    // Construct HTML elements for each image
-    html += `
-    <section>
-      <p><b>Title:</b> ${(meta.title || "<b>unknown</b>")}</p>
-      <p><b>Author:</b> ${(meta.author || "<b>unknown</b>")}</p>
-      <p><b>Creator:</b> ${(meta.creator || "<b>unknown</b>")}</p>
-      <p><b>PDF Format Version:</b> ${meta.pdfformatversion}</p>
-      <p><b>Number of pages:</b> ${meta.numpages}</p>
-      <p>Open PDF file in new tab:<a href="/pdfs/${pdfName}" target="_blank"> ${pdfName}</a>.</p>
-    </section>
-    `;
+    // Construct HTML elements for each Pdf
+    html += printPdfSection(pdf.pdfFile, pdf.pdfMetadata);
 
   }
   //send to the website 
+  return html;
+}
+
+function printPdfSection(fileName, meta) {
+  // Construct HTML elements for Pdf object
+  let html = `
+      <section>
+        <p><b>Title:</b> ${(meta.title || "<b>unknown</b>")}</p>
+        <p><b>Author:</b> ${(meta.author || "<b>unknown</b>")}</p>
+        <p><b>Creator:</b> ${(meta.creator || "<b>unknown</b>")}</p>
+        <p><b>PDF Format Version:</b> ${meta.pdfformatversion}</p>
+        <p><b>Number of pages:</b> ${meta.numpages}</p>
+        <p>Open PDF file in new tab:<a href="/pdfs/${fileName}" target="_blank"> ${fileName}</a>.</p>
+      </section>
+      `;
   return html;
 }
