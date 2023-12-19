@@ -172,7 +172,6 @@ app.get('/api/powerpoint/:searchTerm/:searchType', async (request, response) => 
   response.json(result);
 });
 
-
 // If you search in category image than you will come here.
 app.get('/api/image/:searchTerm/:searchType', async (request, response) => {
   // Get the search term from as a parameter from the route/url
@@ -182,25 +181,28 @@ app.get('/api/image/:searchTerm/:searchType', async (request, response) => {
   // Make a database query and remember the result
   // using the search term
 
-  let sql = `
-   SELECT * 
-   FROM image
-   WHERE LOWER(imageMetadata ->> '$.${searchType}') LIKE LOWER(?)
-   LIMIT 10
-  `;
+  let terms = searchTerm.split(' ').map(function(term) { return `%${term}%`; });
+  
+  let filter = terms.map(function(value) {
+    return `LOWER(imageMetadata ->> '$.${searchType}') LIKE LOWER(?)`
+  }).join(" AND ");
 
   // since the sql gets a bit different if you want to search all
   // fix this with a if-clause replacing the sql
   if (searchType == 'all') {
-    sql = `
-      SELECT *
-      FROM image
-      WHERE LOWER(imageMetadata) LIKE LOWER(?)
-      LIMIT 10
-    `;
+    filter = terms.map(function(value) {
+      return `LOWER(imageMetadata) LIKE LOWER(?)`
+    }).join(" AND ");
   }
 
-  let result = await query(sql, ['%' + searchTerm + '%']);
+  let sql = `
+   SELECT * 
+   FROM image
+   WHERE ${filter}
+   LIMIT 10
+  `;
+
+  let result = await query(sql, terms);
 
   // Send a response to the client
   response.json(result);
