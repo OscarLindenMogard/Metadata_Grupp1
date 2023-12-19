@@ -83,6 +83,7 @@ app.get('/api/all/:searchTerm', async (request, response) => {
   // Get the search term from as a parameter from the route/url
   let searchTerm = request.params.searchTerm;
 
+  //SQL query to get data from all 4 tables and filter by search.
   let sql = `
     SELECT *
     FROM (

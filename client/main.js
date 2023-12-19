@@ -57,21 +57,22 @@ function checkForMap(){
 
 // Declare a new function named search
 async function search() {
+
   // Read the user input from the term field in the form searchForm
   let searchTerm = document.forms.searchForm.term.value;
+
   //Get checkboxfilter and select searchtype from that
   var checkboxFilter = document.querySelector('input[name=checkboxfilter]:checked');
 
+  // Make varibles
   let cbValue;
   let searchType;
   let path;
 
+  //Look if checkbox is aktiv. if not then give value "all"
   if (checkboxFilter) {
-    console.log("checkbox filter")
     cbValue = checkboxFilter.value; 
-    console.log(cbValue);
   } else {
-    console.log("cbvalue=all")
     cbValue = "all"; 
   }
 
@@ -92,14 +93,16 @@ async function search() {
     searchType = document.forms.searchForm.searchTypeall.value;
     path = "all";
   }
-  console.log(path)
+  
   // Empty the input field
   document.forms.searchForm.term.value = '';
+
+  // Get data from repective search and checkbox value and send to funtion to get to website
   try {
     let result;
     let rawdata;
+    //If you search for all then get data from "all"
     if (path == "all"){
-      console.log("all")
       let rawData = await fetch(`/api/all/${searchTerm}`);
       if (!rawData.ok) {
         throw new Error('Failed to fetch data');
@@ -107,8 +110,8 @@ async function search() {
       let rawdata = await rawData.json();
       result = outputAllResult(rawdata, searchTerm);
     } 
+    // If you search from other then get data from other.
     else {
-      console.log("hehe")
       // Read the JSON data using fetch
       let rawData = await fetch(`/api/${path}/${searchTerm}/${searchType}`);
       if (!rawData.ok) {
@@ -133,6 +136,7 @@ async function search() {
 
     // Grab the element/tag with the class searchResults
     let searchResultsElement = document.querySelector('.searchResults');
+
     // Change the content of the searchResults element
     searchResultsElement.innerHTML = result;
 
@@ -142,20 +146,6 @@ async function search() {
   }
 }
 
-// async function fetchAll(path, searchTerm) {
-//   try {
-//     let rawData = await fetch(`/api/${path}`);
-//     if (!rawData.ok) {
-//       throw new Error('Failed to fetch data');
-//     }
-//     let rawdata = await rawData.json();
-//     return outputAllResult(rawdata, searchTerm);
-//   } catch (error) {
-//     console.error('Error fetching data:', error);
-//     // Handle the error - display a message to the user or retry the request.
-//   }
-// }
-
 function outputAllResult(alldata, searchTerm) {
   // Create an empty string to hold HTML content
   let html = `
@@ -163,11 +153,12 @@ function outputAllResult(alldata, searchTerm) {
   <p>Found ${alldata.length} results.</p>
   `;
 
-  // Loop through the found songs
+  // Loop through the found datatypes
   for (let data of alldata) {
     let meta = data.Metadata;
     let filename = data.File
-
+    
+    // look for the filename and filter how the data will presive
     if (filename.slice(-4) == '.mp3') {
       html += `
       <section>
@@ -219,9 +210,6 @@ function outputAllResult(alldata, searchTerm) {
       </section>
       `;
     }
-    
-    
-    
   }
   return html;
 }
