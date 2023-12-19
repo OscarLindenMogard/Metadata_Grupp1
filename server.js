@@ -144,25 +144,29 @@ app.get('/api/powerpoint/:searchTerm/:searchType', async (request, response) => 
   // Make a database query and remember the result
   // using the search term
 
-  let sql = `
-   SELECT * 
-   FROM powerpoint
-   WHERE LOWER(powerpointMetadata ->> '$.${searchType}') LIKE LOWER(?)
-   LIMIT 10
-  `;
+  let terms = searchTerm.split(' ').map(function(term) { return `%${term}%`; });
+  
+  let filter = terms.map(function(value) {
+    return `LOWER(powerpointMetadata ->> '$.${searchType}') LIKE LOWER(?)`
+  }).join(" AND ");
 
   // since the sql gets a bit different if you want to search all
   // fix this with a if-clause replacing the sql
   if (searchType == 'all') {
-    sql = `
-      SELECT *
-      FROM powerpoint
-      WHERE LOWER(powerpointMetadata) LIKE LOWER(?)
-      LIMIT 10
-    `;
+    filter = terms.map(function(value) {
+      return `LOWER(powerpointMetadata) LIKE LOWER(?)`
+    }).join(" AND ");
   }
 
-  let result = await query(sql, ['%' + searchTerm + '%']);
+  let sql = `
+   SELECT * 
+   FROM powerpoint
+   WHERE ${filter}
+   LIMIT 10
+  `;
+
+  let result = await query(sql, terms);
+
 
   // Send a response to the client
   response.json(result);
