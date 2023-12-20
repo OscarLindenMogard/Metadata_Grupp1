@@ -58,10 +58,20 @@ function initMap() {
     // now loop the result and create html
     let html = '';
     for (let image of images) {
+      let filename = image.imageFile;
+      let meta = image.imageMetadata;
+      
       html += `
-        <section>
-          <img src="/Image/${image.imageFile}">
-        </section>
+      <section>
+        <p><b> Image name:</b>"${filename}"</p>
+        <img class="image-result" src="/Image/${filename}">
+        <p><b>Phone maker:</b> ${meta.Make}</p>
+        <p><b>Latitude:</b> ${meta.latitude}</p>
+        <p><b>Phone model:</b> ${meta.Model}</p>
+        <a href="./Image/${filename}" download="${filename}">
+          <button class="button-download" type="button">Download file</button>
+        </a>
+      </section>
       `;
     }
     document.querySelector('.searchResult').innerHTML = html;

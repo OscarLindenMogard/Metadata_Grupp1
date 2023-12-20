@@ -83,6 +83,7 @@ app.get('/api/all/:searchTerm', async (request, response) => {
   // Get the search term from as a parameter from the route/url
   let searchTerm = request.params.searchTerm;
 
+  //SQL query to get data from all 4 tables and filter by search.
   let sql = `
     SELECT *
     FROM (
@@ -143,30 +144,33 @@ app.get('/api/powerpoint/:searchTerm/:searchType', async (request, response) => 
   // Make a database query and remember the result
   // using the search term
 
-  let sql = `
-   SELECT * 
-   FROM powerpoint
-   WHERE LOWER(powerpointMetadata ->> '$.${searchType}') LIKE LOWER(?)
-   LIMIT 10
-  `;
+  let terms = searchTerm.split(' ').map(function(term) { return `%${term}%`; });
+  
+  let filter = terms.map(function(value) {
+    return `LOWER(powerpointMetadata ->> '$.${searchType}') LIKE LOWER(?)`
+  }).join(" AND ");
 
   // since the sql gets a bit different if you want to search all
   // fix this with a if-clause replacing the sql
   if (searchType == 'all') {
-    sql = `
-      SELECT *
-      FROM powerpoint
-      WHERE LOWER(powerpointMetadata) LIKE LOWER(?)
-      LIMIT 10
-    `;
+    filter = terms.map(function(value) {
+      return `LOWER(powerpointMetadata) LIKE LOWER(?)`
+    }).join(" AND ");
   }
 
-  let result = await query(sql, ['%' + searchTerm + '%']);
+  let sql = `
+   SELECT * 
+   FROM powerpoint
+   WHERE ${filter}
+   LIMIT 10
+  `;
+
+  let result = await query(sql, terms);
+
 
   // Send a response to the client
   response.json(result);
 });
-
 
 // If you search in category image than you will come here.
 app.get('/api/image/:searchTerm/:searchType', async (request, response) => {
@@ -177,25 +181,28 @@ app.get('/api/image/:searchTerm/:searchType', async (request, response) => {
   // Make a database query and remember the result
   // using the search term
 
-  let sql = `
-   SELECT * 
-   FROM image
-   WHERE LOWER(imageMetadata ->> '$.${searchType}') LIKE LOWER(?)
-   LIMIT 10
-  `;
+  let terms = searchTerm.split(' ').map(function(term) { return `%${term}%`; });
+  
+  let filter = terms.map(function(value) {
+    return `LOWER(imageMetadata ->> '$.${searchType}') LIKE LOWER(?)`
+  }).join(" AND ");
 
   // since the sql gets a bit different if you want to search all
   // fix this with a if-clause replacing the sql
   if (searchType == 'all') {
-    sql = `
-      SELECT *
-      FROM image
-      WHERE LOWER(imageMetadata) LIKE LOWER(?)
-      LIMIT 10
-    `;
+    filter = terms.map(function(value) {
+      return `LOWER(imageMetadata) LIKE LOWER(?)`
+    }).join(" AND ");
   }
 
-  let result = await query(sql, ['%' + searchTerm + '%']);
+  let sql = `
+   SELECT * 
+   FROM image
+   WHERE ${filter}
+   LIMIT 10
+  `;
+
+  let result = await query(sql, terms);
 
   // Send a response to the client
   response.json(result);
@@ -216,27 +223,20 @@ app.get('/api/pdf/:searchTerm/:searchType', async (request, response) => {
     return `LOWER(pdfMetadata ->> '$.${searchType}') LIKE LOWER(?)`
   }).join(" AND ");
 
+  // since the sql gets a bit different if you want to search all
+  // fix this with a if-clause replacing the sql
+  if (searchType == 'all') {
+    filter = terms.map(function(value) {
+      return `LOWER(pdfMetadata) LIKE LOWER(?)`
+    }).join(" AND ");
+  }
+
   let sql = `
    SELECT * 
    FROM pdf
    WHERE ${filter}
    LIMIT 10
   `;
-
-  // since the sql gets a bit different if you want to search all
-  // fix this with a if-clause replacing the sql
-  if (searchType == 'all') {
-    let filter = terms.map(function(value) {
-      return `LOWER(pdfMetadata) LIKE LOWER(?)`
-    }).join(" AND ");
-    
-    sql = `
-      SELECT *
-      FROM pdf
-      WHERE ${filter}
-      LIMIT 10
-    `;
-  }
 
   let result = await query(sql, terms);
 

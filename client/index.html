@@ -9,13 +9,16 @@
 </head>
 
 <body>
+  <header>
+    <h1>Search Web</h1>
+  </header> 
   <div id="outerWrapper">
     <div id="wrapper">
-      <form name="searchForm" onsubmit="search(); return false">
+      <form name="searchForm" onsubmit="search(); return false" class="searchbar">
         <!-- The searchbar -->
-        <input name="term" placeholder="Search term">
-        <!-- Searchbutton -->
-        <button type="submit">Search</button>
+        <input name="term" placeholder="Search term" class="search-input">
+        <button type="submit" class="search-button">Search</button>
+      
         <!-- checkboxes to select what filetype you want to search for -->
         <p class="checkboxes">
           <input onchange="checkboxChange(this);" type="checkbox" id="all" name="checkboxfilter" value="all">All</input>
@@ -28,16 +31,55 @@
           <input onchange="checkboxChange(this);" type="checkbox" id="pdf" name="checkboxfilter" value="pdf">PDF</input>
         </p>
 
-        <p>
-          <!-- drop down bar for music -->
-        <div id="musicFilter" style="display:none;">
-          Filter music:
-          <select name="searchTypemusic">
-            <option value="all">All</option>
-            <option value="artist">Artist name</option>
-            <option value="album">Album name</option>
-            <option value="title">Track name</option>
-          </select>
+        <div class="dropbar">
+            <!-- drop down bar for music -->
+          <div id="musicFilter" style="display:none;">
+            Filter music:
+            <select name="searchTypemusic">
+              <option value="all">All</option>
+              <option value="artist">Artist name</option>
+              <option value="album">Album name</option>
+              <option value="title">Track name</option>
+            </select>
+          </div>
+          <!-- drop down bar for Powerpoints -->
+          <div id="pptFilter" style="display:none;">
+            Filter powerpoint:
+            <select name="searchTypeppt">
+              <option value="all">All</option>
+              <option value="title">Powerpoint title</option>
+              <option value="company">Company</option>
+            </select>
+          </div>
+          <!-- drop down bar for PDFfiler -->
+          <div id="pdfFilter" style="display:none;">
+            Filter PDF:
+            <select name="searchTypePdf">
+              <option value="all">All</option>
+              <option value="title">Title</option>
+              <option value="author">Author</option>
+              <option value="creator">Creator</option>
+              <option value="text">Text</option>
+              <option value="numpages">Number of pages</option>
+            </select>
+          </div>
+          <!-- drop down bar for everything -->
+          <div id="allFilter" style="display:none;">
+            Filter:
+            <select name="searchTypeall">
+              <option value="all">All</option>
+            </select>
+          </div>
+          <!-- drop down bar for image -->
+          <div id="imageFilter" style="display:none;">
+            Filter Images:
+            <select onchange="checkForMap();" name="searchTypeimage">
+              <option value="all">All</option>
+              <option value="make">Phone company</option>
+              <option value="model">model</option>
+              <option value="map">Find by map</option>
+            </select>
+          </div>
         </div>
         <!-- drop down bar for Powerpoints -->
         <div id="pptFilter" style="display:none;">
@@ -72,19 +114,19 @@
           Filter Images:
           <select onchange="checkForMap();" name="searchTypeimage">
             <option value="all">All</option>
-            <option value="make">Phone company</option>
-            <option value="model">model</option>
+            <option value="Make">Phone company</option>
+            <option value="Model">Model</option>
             <option value="map">Find by map</option>
           </select>
         </div>
         </p>
       </form>
-      <article class="searchResults">
-        Select something to search for.
-      </article>
-      <div id="mapFrame" style="display:none;">
-        <iframe src="geo.html" style="height:500px;width:100%;" title="Google map"></iframe>
+      <div  class="map2" id="mapFrame" style="display:none;">
+        <iframe class="map" src="geo.html" title="Google map"></iframe>
       </div>
+      <article class="searchResults">
+        Select something to search for. go here
+      </article>
     </div>
   </div>
   <script src="main.js"></script>
