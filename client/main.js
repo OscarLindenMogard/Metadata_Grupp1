@@ -232,6 +232,8 @@ function printMusicSection(fileName, meta) {
     <h2>${meta.title}</h2>
     <p><b>Artist:</b> ${meta.artist}</p>
     <p><b>Album:</b> ${meta.album}</p>
+    <p><b>Year:</b> ${meta.year}</p>
+    <p><b>Genre:</b> ${meta.genre}</p>
     <p>
       <audio controls src="music/${fileName}"></audio>
     </p>
@@ -270,7 +272,8 @@ function printPowerpointSection(fileName, meta) {
         <h2>${meta.title}</h2>
         <p><b>Title:</b> ${meta.title}</p>
         <p><b>Company:</b> ${meta.company}</p>
-        <p><b>slides:</b> ${meta.slide_count}</p>
+        <p><b>Slides:</b> ${meta.slide_count}</p>
+        <p><b>Creation_date:</b> ${ meta.creation_date ?? meta.creation_date.substring(0,10)}}</p>
         <a href="./powerpoints/${fileName}" download="${fileName}">
         <button class="button-download" type="button">Download file</button>
         </a>
@@ -302,9 +305,9 @@ function printImageSection(fileName, meta) {
       <section>
         <p><b> Image name:</b>"${fileName}"</p>
         <img class="image-result" src="/Image/${fileName}">
-        <p><b>Phone maker:</b> ${meta.Make}</p>
+        <p><b>Brand:</b> ${meta.Make}</p>
+        <p><b>Model:</b> ${meta.Model}</p>
         <p><b>Latitude:</b> ${meta.latitude}</p>
-        <p><b>Phone model:</b> ${meta.Model}</p>
         <a href="./Image/${fileName}" download="${fileName}">
           <button class="button-download" type="button">Download file</button>
         </a>
