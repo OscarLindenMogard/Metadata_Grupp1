@@ -51,8 +51,10 @@ function setMapVisible(isVisible) {
 }
 
 // Check on change if map is selected and show the iframe with the google map
-function checkForMap(opt) {
-  console.log("checkForMap", JSON.stringify(opt.value));
+function checkForMap(){
+  let opt = document.querySelector("select[name=searchTypeimage]");
+
+  console.log("checkForMap", opt.value);
   let val = opt.value;
   hideMap(val);
 }
@@ -68,6 +70,7 @@ function hideMap(val) {
       googlemap.style.display = "none";
     }
   }
+
 }
 
 // Declare a new function named search
@@ -77,12 +80,10 @@ async function search() {
   //Get checkboxfilter and select searchtype from that
   var checkboxFilter = document.querySelector('input[name=checkboxfilter]:checked');
 
-  // Make varibles
   let cbValue;
   let searchType;
   let path;
 
-  //Look if checkbox is aktiv. if not then give value "all"
   if (checkboxFilter) {
     console.log("checkbox filter")
     cbValue = checkboxFilter.value;
@@ -114,16 +115,14 @@ async function search() {
     searchType = document.forms.searchForm.searchTypeall.value;
     path = "all";
   }
-
+  console.log(path)
   // Empty the input field
   document.forms.searchForm.term.value = '';
-
-  // Get data from repective search and checkbox value and send to funtion to get to website
   try {
     let result;
     let rawdata;
-    //If you search for all then get data from "all"
     if (path == "all") {
+      console.log("all")
       let rawData = await fetch(`/api/all/${searchTerm}`);
       if (!rawData.ok) {
         throw new Error('Failed to fetch data');
@@ -131,8 +130,8 @@ async function search() {
       let rawdata = await rawData.json();
       result = outputAllResult(rawdata, searchTerm);
     }
-    // If you search from other then get data from other.
     else {
+      console.log("hehe")
       // Read the JSON data using fetch
       let rawData = await fetch(`/api/${path}/${searchTerm}/${searchType}`);
       if (!rawData.ok) {
@@ -157,7 +156,6 @@ async function search() {
 
     // Grab the element/tag with the class searchResults
     let searchResultsElement = document.querySelector('.searchResults');
-
     // Change the content of the searchResults element
     searchResultsElement.innerHTML = result;
 
@@ -188,7 +186,7 @@ function outputAllResult(alldata, searchTerm) {
   <p>Found ${alldata.length} results.</p>
   `;
 
-  // Loop through the found datatypes
+  // Loop through the found songs
   for (let data of alldata) {
     let meta = data.Metadata;
     let filename = data.File
